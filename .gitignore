@@ -1,0 +1,8 @@
+.editorconfig
+.DS_Store
+/.env
+.idea
+node_modules
+commands/test.go
+#*_test.go
+profiles/*
