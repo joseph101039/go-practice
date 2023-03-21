@@ -6,3 +6,5 @@ node_modules
 commands/test.go
 #*_test.go
 profiles/*
+goroutine
+goroutine.test*

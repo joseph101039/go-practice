@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"sync"
 	"testing"
 )
 
@@ -35,7 +36,7 @@ const endNumber int = 90000
 // Test_findPrimes find some prime numbers non-parallelly
 func Test_findPrimes(t *testing.T) {
 	var isPrime bool
-	for num := startNumber; num <= endNumber; num+=2 {
+	for num := startNumber; num <= endNumber; num++ {
 		if isPrime = isPrimeNumber(num); isPrime {
 			fmt.Printf("%d ", num)
 		}
@@ -48,14 +49,33 @@ func Test_findPrimesParallel(t *testing.T) {
 	findPrimesParallelTest(nil)
 }
 
-// Test_findPrimesParallelNonWait use select channels to reduc blocking time
-func Test_findPrimesParallelNonWait(t *testing.T) {
-	findPrimesParallelTestNonWait(nil)
-
+// Test_findPrimesBufferedChan goroutine to find some prime numbers and output to buffer disorderly
+func Test_findPrimesBufferedChan(t *testing.T) {
+	findPrimesBufferedChan(nil)
 }
+
+// // Test_findPrimesParallelNonWait use select channels to reduc blocking time
+// func Test_findPrimesParallelNonWait(t *testing.T) {
+// 	findPrimesParallelTestNonWait(nil)
+// }
+
+
 
 func Test_findPrimesParallelChanMultiplex(t *testing.T) {
 	// todo implement: https://go.dev/doc/effective_go#chan_of_chan
+}
+
+
+
+func Benchmark_findPrimes(b *testing.B) {
+	b.StartTimer()
+
+	for num := startNumber; num <= endNumber; num++ {
+		if  isPrimeNumber(num) {
+			// fmt.Printf("%d ", num)
+		}
+	}
+	b.StopTimer()
 }
 
 func Benchmark_findPrimesParallel(b *testing.B) {
@@ -64,16 +84,58 @@ func Benchmark_findPrimesParallel(b *testing.B) {
 	}
 }
 
-func Benchmark_findPrimesParallelNonWait(b *testing.B) {
+func Benchmark_findPrimesBufferedChan(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		findPrimesParallelTestNonWait(b)
+		findPrimesBufferedChan(b)
 	}
+}
+
+// func Benchmark_findPrimesParallelNonWait(b *testing.B) {
+// 	for i := 0; i < b.N; i++ {
+// 		findPrimesParallelTestNonWait(b)
+// 	}
+// }
+
+
+
+
+
+func findPrimesBufferedChan(b *testing.B) {
+
+	// create a buffered channel
+	var ch = make(chan int, 100)
+	wg := new(sync.WaitGroup)
+
+	for num := startNumber; num <= endNumber; num++ {
+		wg.Add(1)
+		go func (num int)  {
+			defer wg.Done()  // minus 1 before leaving
+			if  isPrimeNumber(num) {
+				ch <- num
+			}
+		}(num)
+	}
+
+	// close channel after the wait group is empty
+	go func (wg *sync.WaitGroup, ch chan<- int)  {
+		wg.Wait()
+		close(ch)
+	}(wg, ch)
+
+
+	for _ = range ch {}
+
+	// var prime int
+	// for prime = range ch {
+	// 	fmt.Printf("%d ", prime)
+	// }
+
 }
 
 func findPrimesParallelTestNonWait(b *testing.B) {
 
 	// 初始化 channels 的地方不要測試
-	var ch [int(endNumber - startNumber + 1)/2]chan bool // fixed length allocation use array instead of slice
+	var ch [endNumber - startNumber + 1]chan bool // fixed length allocation use array instead of slice
 	for i := 0; i < len(ch); i++ {
 		ch[i] = make(chan bool)
 	}
@@ -145,7 +207,7 @@ func findPrimesParallelTest(b *testing.B) {
 
 	for num := startNumber; num <= endNumber; num++ {
 		if <-ch[num-startNumber] {
-			fmt.Printf("%d ", num)
+			// fmt.Printf("%d ", num)
 		}
 	}
 
