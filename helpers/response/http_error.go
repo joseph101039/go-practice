@@ -1,9 +1,9 @@
 package response
 
 import (
+	"goroutine/helpers/goerror"
 	"log"
 	"net/http"
-	"rdm/google_organization/helpers/goerror"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,9 +1,9 @@
 package oauth_error_logger
 
 import (
-	"rdm/google_organization/app/models"
-	"rdm/google_organization/app/repositories"
-	"rdm/google_organization/helpers/db"
+	"goroutine/app/models"
+	"goroutine/app/repositories"
+	"goroutine/helpers/db"
 )
 
 type OauthErrorLogger struct {

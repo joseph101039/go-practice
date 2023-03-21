@@ -2,7 +2,7 @@ package response
 
 import (
 	"fmt"
-	"rdm/google_organization/helpers/env"
+	"goroutine/helpers/env"
 )
 
 const DEPARTMENT_CODE = "22"

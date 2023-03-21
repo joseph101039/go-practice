@@ -2,7 +2,7 @@ package db
 
 import (
 	"database/sql"
-	"rdm/google_organization/helpers/env"
+	"goroutine/helpers/env"
 	"strconv"
 
 	"gorm.io/driver/mysql"

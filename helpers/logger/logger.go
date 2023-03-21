@@ -1,11 +1,11 @@
 package logger
 
 import (
+	"goroutine/helpers/path"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
-	"rdm/google_organization/helpers/path"
 )
 
 // 記錄最近程序的 file path

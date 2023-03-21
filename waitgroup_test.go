@@ -22,20 +22,20 @@ go test -v -run=^$ -bench=findPrimesParallelNonWait  \
 3. dump profile content
  go tool pprof -text goroutine.test.exe profiles/mem.out
 
-4. dump another format require "apt-get install graphviz gv"
+4. dump another format require "brew install graphviz"
 go tool pprof -svg goroutine.test.exe profiles/mem.out > profiles/mem.out.svg
 
 5. 查看 trace
 go tool trace trace.out
 */
 
-const startNumber int = 60000
+const startNumber int = 60001
 const endNumber int = 90000
 
 // Test_findPrimes find some prime numbers non-parallelly
 func Test_findPrimes(t *testing.T) {
 	var isPrime bool
-	for num := startNumber; num <= endNumber; num++ {
+	for num := startNumber; num <= endNumber; num+=2 {
 		if isPrime = isPrimeNumber(num); isPrime {
 			fmt.Printf("%d ", num)
 		}
@@ -73,7 +73,7 @@ func Benchmark_findPrimesParallelNonWait(b *testing.B) {
 func findPrimesParallelTestNonWait(b *testing.B) {
 
 	// 初始化 channels 的地方不要測試
-	var ch [endNumber - startNumber + 1]chan bool // fixed length allocation use array instead of slice
+	var ch [int(endNumber - startNumber + 1)/2]chan bool // fixed length allocation use array instead of slice
 	for i := 0; i < len(ch); i++ {
 		ch[i] = make(chan bool)
 	}

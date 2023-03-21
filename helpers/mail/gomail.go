@@ -2,8 +2,9 @@ package mail
 
 import (
 	"errors"
+	"goroutine/helpers/env"
+
 	"gopkg.in/gomail.v2"
-	"rdm/google_organization/helpers/env"
 )
 
 const (

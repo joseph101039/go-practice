@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"rdm/google_organization/helpers/env"
+	"goroutine/helpers/env"
 )
 
 var dbConfig *DbConfig = nil
