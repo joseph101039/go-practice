@@ -6,9 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+func init() {
+	var _ Model = (*SystemUser)(nil) // 檢查是否實作 Model interface
+}
+
 // SystemUser 後台系統經過 Google 登入後的紀錄
 type SystemUser struct {
-	gorm.Model
+	BaseModel
 	Id           uint           `gorm:"column:id;primary_key;type:int unsigned not null auto_increment"`
 	Name         string         `gorm:"column:name;not null;size:255"`
 	Email        string         `gorm:"column:email;index:,length:10;not null;size:255"`

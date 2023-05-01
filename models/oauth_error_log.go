@@ -2,8 +2,13 @@ package models
 
 import "time"
 
+func init() {
+	var _ Model = (*Group)(nil) // 檢查是否實作 Model interface
+}
+
 // OauthErrorLog token model
 type OauthErrorLog struct {
+	BaseModel
 	Logged      time.Time `gorm:"->;column:logged;type:timestamp;default:CURRENT_TIMESTAMP();not null"` // read only column
 	SystemName  string    `gorm:"column:system_name;not null;size:255;comment:系統名稱"`
 	ClientID    string    `gorm:"column:client_id;length:255;not null;comment:用戶ID"`

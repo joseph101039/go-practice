@@ -6,7 +6,12 @@ import (
 	"gorm.io/gorm"
 )
 
+func init() {
+	var _ Model = (*System)(nil) // 檢查是否實作 Model interface
+}
+
 type System struct {
+	BaseModel
 	Id        uint           `gorm:"column:id;primary_key;type:int unsigned not null auto_increment"`
 	Name      string         `gorm:"column:name;not null;size:255;comment:系統名稱"`
 	Alias     string         `gorm:"column:alias;not null;size:255;comment:系統代碼"`

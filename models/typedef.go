@@ -4,7 +4,8 @@ package models
 
 type (
 	Model = interface {
-		TableName() string //回傳表格名稱
+		String() string    // print string
+		TableName() string // table name
 	}
 
 	ModelSlice = []Model
@@ -15,5 +16,5 @@ type (
 	UpdatesMap   = map[string]interface{}
 	CreatesMap   = map[string]interface{}
 	SelectsSlice = []string
-	OrderBySlice = []string  // 依序排序, 例如 {"column1 desc", "column2"}
+	OrderBySlice = []string // 依序排序, 例如 {"column1 desc", "column2"}
 )

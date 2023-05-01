@@ -69,6 +69,58 @@ func toString(value interface{}) string {
 	}
 }
 
+func FormatString(v any) (val string, err error) {
+
+	switch s := v.(type) {
+	case string:
+		val = s
+	case []byte:
+		val = string(s)
+	case []rune:
+		val = string(s)
+
+
+	case int:
+		val = strconv.FormatInt(int64(s), 10)
+	case int8:
+		val = strconv.FormatInt(int64(s), 10)
+	case int16:
+		val = strconv.FormatInt(int64(s), 10)
+	case int32:
+		val = strconv.FormatInt(int64(s), 10)
+	case int64:
+		val = strconv.FormatInt(int64(s), 10)
+	case uint:
+		val = strconv.FormatUint(uint64(s), 10)
+	case uint8:
+		val = strconv.FormatUint(uint64(s), 10)
+	case uint16:
+		val = strconv.FormatUint(uint64(s), 10)
+	case uint32:
+		val = strconv.FormatUint(uint64(s), 10)
+	case uint64:
+		val = strconv.FormatUint(uint64(s), 10)
+	case uintptr:
+		val = strconv.FormatUint(uint64(s), 10)
+	case float32:
+		val = strconv.FormatFloat(float64(s), 'f', -1, 64)
+	case float64:
+		val = strconv.FormatFloat(float64(s), 'f', -1, 64)
+	case bool:
+		if s {
+			val = "1"
+		} else {
+			val = "0"
+		}
+	case nil:
+		val = ""
+	default:
+		err = fmt.Errorf("cannot convert type %t to string", s)
+	}
+
+	return
+}
+
 // formatBasicType formats a value without inspecting its internal structure.
 // reference: https://wizardforcel.gitbooks.io/gopl-zh/content/ch12/ch12-02.html
 func formatBasicType(v reflect.Value) (string, error) {

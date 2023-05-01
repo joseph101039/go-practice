@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	goformat "goroutine/helpers/request"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -29,14 +30,14 @@ func Test_getRequest(t *testing.T) {
 	// err = json.Unmarshal(body, &data)
 	// goerror(err)
 	// fmt.Println("response body", data)
+	// return
 
 	//method 2
 	var p post
 	err = json.NewDecoder(resp.Body).Decode(&p)
 	goerror(err)
 	resp.Body.Close()
-	log.Printf("post = %+v", p)
-
+	log.Println(p) // call:  type Stringer interface {  String() string }
 }
 
 func Test_postRequest(t *testing.T) {
@@ -59,6 +60,17 @@ func Test_postRequest(t *testing.T) {
 
 }
 
+func Test_toString(t *testing.T) {
+
+	var i int32 = 10
+	var u uint8 = 10
+	fmt.Println(goformat.FormatString(nil))
+	fmt.Println(goformat.FormatString(12.24))
+	fmt.Println(goformat.FormatString(u))
+	fmt.Println(goformat.FormatString(i))
+
+}
+
 func resolveResponseBody(resp *http.Response) (respBody map[string]interface{}) {
 	var err error = nil
 
@@ -68,6 +80,7 @@ func resolveResponseBody(resp *http.Response) (respBody map[string]interface{}) 
 	defer resp.Body.Close()
 
 	switch contentType := resp.Header.Get("Content-Type"); true {
+
 	case strings.HasPrefix(contentType, "application/json"):
 
 		// resolve body
@@ -105,13 +118,24 @@ func goerror(err error) {
 }
 
 type post struct {
-	UserID int    `json:"userId"`
-	ID     int    `json:"id"`
-	Title  string `json:"title"`
-	Body   string `json:"body"`
+	UserID *int    `json:"user_id,omitempty"`
+	ID     *int    `json:"id,omitempty"`
+	Title  *string `json:"title,omitempty"`
+	Body   *string `json:"body,omitempty"`
+	Fake   *string `json:",omitempty"` // json key is Fake
+}
+
+func (p post) String() string {
+	s, _ := json.MarshalIndent(p, "", "  ")
+	return fmt.Sprintf("%T: %s\n", p, s)
 }
 
 type payload struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
+}
+
+func (p payload) String() string {
+	s, _ := json.MarshalIndent(p, "", "  ")
+	return fmt.Sprintf("%T: %s\n", p, s)
 }
