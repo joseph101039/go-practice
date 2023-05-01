@@ -2,6 +2,8 @@ package env
 
 import (
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/joho/godotenv"
 )
@@ -45,7 +47,10 @@ func IsLocal() bool {
 }
 
 func loadEnv() {
-	err := godotenv.Load()
+
+	_, currentFilePath, _, _ := runtime.Caller(1)
+	dir := filepath.Dir(currentFilePath)
+	err := godotenv.Load(dir + "/../../.env")
 	if err != nil {
 		panic(err)
 	}

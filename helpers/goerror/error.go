@@ -21,7 +21,7 @@ func GetStackTrace(err interface{}) string {
 		"\n\n\x1b[31m[%s] panic:\n %s\n%s\x1b[0m",
 		time.Now().Format("2006-01-02 15:04:05"),
 		err,
-		stack(4),  // 省略前四層
+		stack(4), // 省略前四層
 	)
 }
 
@@ -36,8 +36,6 @@ func FatalIf(condition bool, err error) {
 		panic(err)
 	}
 }
-
-
 
 // stack returns a nicely formatted stack frame, skipping skip frames.
 func stack(skip int) []byte {
@@ -66,7 +64,6 @@ func stack(skip int) []byte {
 	return buf.Bytes()
 }
 
-
 // function returns, if possible, the name of the function containing the PC.
 func function(pc uintptr) []byte {
 	fn := runtime.FuncForPC(pc)
@@ -91,7 +88,6 @@ func function(pc uintptr) []byte {
 	name = bytes.Replace(name, centerDot, dot, -1)
 	return name
 }
-
 
 // source returns a space-trimmed slice of the n'th line.
 func source(lines [][]byte, n int) []byte {
