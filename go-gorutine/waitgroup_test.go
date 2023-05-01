@@ -59,19 +59,15 @@ func Test_findPrimesBufferedChan(t *testing.T) {
 // 	findPrimesParallelTestNonWait(nil)
 // }
 
-
-
 func Test_findPrimesParallelChanMultiplex(t *testing.T) {
 	// todo implement: https://go.dev/doc/effective_go#chan_of_chan
 }
-
-
 
 func Benchmark_findPrimes(b *testing.B) {
 	b.StartTimer()
 
 	for num := startNumber; num <= endNumber; num++ {
-		if  isPrimeNumber(num) {
+		if isPrimeNumber(num) {
 			// fmt.Printf("%d ", num)
 		}
 	}
@@ -96,10 +92,6 @@ func Benchmark_findPrimesBufferedChan(b *testing.B) {
 // 	}
 // }
 
-
-
-
-
 func findPrimesBufferedChan(b *testing.B) {
 
 	// create a buffered channel
@@ -108,22 +100,21 @@ func findPrimesBufferedChan(b *testing.B) {
 
 	for num := startNumber; num <= endNumber; num++ {
 		wg.Add(1)
-		go func (num int)  {
-			defer wg.Done()  // minus 1 before leaving
-			if  isPrimeNumber(num) {
+		go func(num int) {
+			defer wg.Done() // minus 1 before leaving
+			if isPrimeNumber(num) {
 				ch <- num
 			}
 		}(num)
 	}
 
 	// close channel after the wait group is empty
-	go func (wg *sync.WaitGroup, ch chan<- int)  {
+	go func(wg *sync.WaitGroup, ch chan<- int) {
 		wg.Wait()
 		close(ch)
 	}(wg, ch)
 
-
-	for _ = range ch {}
+	// for _ = range ch {}
 
 	// var prime int
 	// for prime = range ch {

@@ -103,7 +103,6 @@ func bufferedChannel(t testing.TB, concurrency int, testingLoop int) {
 		resultCallback(chosen, result) 
 	}
 
-
 	
 	close(reqChan)  // to make all recievers finishing waiting
 	t.Logf("There are %d goroutines are currently running", runtime.NumGoroutine())
