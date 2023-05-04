@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	goformat "goroutine/helpers/request"
+	"goroutine/helpers/slices"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -69,6 +70,12 @@ func Test_toString(t *testing.T) {
 	fmt.Println(goformat.FormatString(u))
 	fmt.Println(goformat.FormatString(i))
 
+}
+
+func TestMax(t *testing.T) {
+	fmt.Println(slices.Max([]int{1, 2, 3}))
+	v := []float32{1, 2, 3}
+	fmt.Println(slices.Max[float32](v))
 }
 
 func resolveResponseBody(resp *http.Response) (respBody map[string]interface{}) {

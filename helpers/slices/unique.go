@@ -1,9 +1,9 @@
 package slices
 
-// UniqueString returns a unique subset of the string slice provided.
-func UniqueString(input []string) []string {
-	u := make([]string, 0, len(input))
-	m := make(map[string]bool)
+// Unique returns a unique subset of the slice provided.
+func Unique[T comparable](input []T) []T {
+	u := []T{}
+	m := make(map[T]bool)
 
 	for _, val := range input {
 		if _, ok := m[val]; !ok {
@@ -11,6 +11,5 @@ func UniqueString(input []string) []string {
 			u = append(u, val)
 		}
 	}
-
 	return u
 }
