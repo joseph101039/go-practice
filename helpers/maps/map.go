@@ -2,6 +2,7 @@ package maps
 
 import (
 	"encoding/json"
+	"goroutine/helpers/maths"
 )
 
 type m = map[string]any
@@ -18,14 +19,17 @@ func Merge(left, right m) map[string]any {
 }
 
 // FilterKeys 過濾 arg 只留下傳入的  allows 的 key 值
-func FilterKeys(arg m, allows []string) map[string]any {
-	var ret = make(m)
-	for _, attribute := range allows {
-		if val, ok := arg[attribute]; ok {
-			ret[attribute] = val
+func FilterKeys[T comparable](arg map[T]any, allows []T) {
+
+	l := maths.Max(len(arg)-len(allows), 0)
+	var removed = make([]T, l)
+
+	for _, key := range allows {
+		if val, ok := arg[key]; ok {
+			ret[key] = val
 		}
 	}
-	return ret
+	return
 }
 
 // ToMap transform any object which may implement json tags to map
