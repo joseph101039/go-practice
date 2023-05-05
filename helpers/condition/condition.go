@@ -10,7 +10,7 @@ func If(condition bool, valueIfTrue string, valueIfFalse string) string {
 	}
 }
 
-func IfNull(value interface{}, altValue interface{}) interface{} {
+func IfNull(value interface{}, altValue interface{}) any {
 	if reflect.ValueOf(value).IsNil() {
 		return value
 	} else {
