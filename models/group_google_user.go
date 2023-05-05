@@ -4,7 +4,13 @@ import (
 	"time"
 )
 
+func init() {
+	var _ Model = (*GroupGoogleUser)(nil) // 檢查是否實作 Model interface
+}
+
 type GroupGoogleUser struct {
+	BaseModel
+
 	Id           uint       `gorm:"column:id;primary_key;type:int unsigned not null auto_increment"`
 	GroupId      uint       `gorm:"column:group_id;type:int unsigned;not null"`
 	Group        Group      `gorm:"ForeignKey:GroupId;AssociationForeignKey:Id"`

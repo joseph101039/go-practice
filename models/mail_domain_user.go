@@ -4,13 +4,18 @@ import (
 	"time"
 )
 
+func init() {
+	var _ Model = (*MailDomainUser)(nil) // 檢查是否實作 Model interface
+}
+
 type MailDomainUser struct {
+	BaseModel
 	Id uint `gorm:"column:id;primary_key;type:int unsigned not null auto_increment" json:"id"`
 
 	MailDomainId      uint              `gorm:"column:mail_domain_id;type:int unsigned;not null" json:"mail_domain_id"`
 	UnsyncedUserEmail UnsyncedUserEmail `gorm:"ForeignKey:MailDomainId;AssociationForeignKey:Id;constraint:OnDelete:CASCADE" json:"unsynced_user_email"` // MailDomainId 外鍵指向的 models, 設置連集刪除
 
-	Email     string `gorm:"column:email;uniqueIndex;not null;size:255;comment:Email,唯一鍵" json:"email"`
+	Email string `gorm:"column:email;uniqueIndex;not null;size:255;comment:Email,唯一鍵" json:"email"`
 
 	// API Response 全部內容
 	MemberInfo string `gorm:"column:member_info;type:text;default:null;comment:directory.member API json 格式" json:"member_info"`

@@ -26,12 +26,10 @@ func NewConnection(config *DbConfig) *gorm.DB {
 
 	}
 
-
 	// print each queries if GORM debug mode is enabled
 	// see: https://gorm.io/zh_CN/docs/logger.html
 	var gormDebugMode string = env.Get("GORM_DEBUG")
 	enabled, err := strconv.ParseBool(gormDebugMode)
-
 	if (err == nil) && enabled {
 		db.Config.Logger = logger.Default.LogMode(logger.Info)
 	} else {

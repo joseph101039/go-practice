@@ -9,6 +9,8 @@ import (
 	"sync"
 	"testing"
 
+	_ "goroutine/helpers/env" // loadenv
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -40,7 +42,7 @@ func syncQuery(tb interface{}) {
 func asyncQuery(tb interface{}) {
 	db := newConn()
 
-	ch := make(chan *map[string]interface{}, 5)
+	ch := make(chan *models.OauthToken, 5)
 	const pcount = 10
 	var wg sync.WaitGroup
 	for i := 0; i < pcount; i++ {
@@ -49,31 +51,26 @@ func asyncQuery(tb interface{}) {
 	}
 
 	var (
-		// result *map[string]interface{}
-		ok    bool = false
 		count uint = 0
 	)
 
-	for {
-		// result, ok = <-ch
-		_, ok = <-ch
-		if !ok {
+	for result := range ch {
+		count++
+
+		log.Printf("count %d,\n %s\n", count, result)
+		if count == pcount {
+			close(ch)
 			break
 		}
-
-		count++
-		log.Printf("%d\n", count)
 	}
-
-	// wg.Wait()
-
 }
 
-func asyncSampleQuery(db *gorm.DB, ch chan<- *map[string]interface{}) {
+func asyncSampleQuery(db *gorm.DB, ch chan<- *models.OauthToken) {
+
 	db.Begin()
 	defer db.Rollback()
 
-	result := new(map[string]interface{})
+	result := new(models.OauthToken)
 	err := db.Model(OauthToken).
 		Joins(fmt.Sprintf("JOIN %s ON %s.id = %s.google_user_id",
 			googleUser.TableName(),
@@ -93,7 +90,7 @@ func syncSampleQuery(db *gorm.DB) {
 	db.Begin()
 	defer db.Rollback()
 
-	result := new(map[string]interface{})
+	result := new(models.OauthToken)
 	err := db.Model(OauthToken).
 		Joins(fmt.Sprintf("JOIN %s ON %s.id = %s.google_user_id",
 			googleUser.TableName(),
@@ -105,13 +102,17 @@ func syncSampleQuery(db *gorm.DB) {
 
 	goerror.Fatal(err)
 	db.Commit()
+
+	log.Printf("%#v\n", result)
+	log.Println(result)
 }
 
 func newConn() *gorm.DB {
+
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 
-		env.Get("DB_USER"),
+		env.Get("DB_USERNAME"),
 		env.Get("DB_PASSWORD"),
 		env.Get("DB_HOST"),
 		env.Get("DB_PORT"),
@@ -121,7 +122,7 @@ func newConn() *gorm.DB {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true, // global disable to gain 30%+ performance improvement
 		AllowGlobalUpdate:      true,
-		Logger:                 logger.Default.LogMode(logger.Info), // print every queries
+		Logger:                 logger.Default.LogMode(logger.Error), // print every queries
 	})
 	goerror.Fatal(err)
 

@@ -45,5 +45,6 @@ func GetDefaultConfig() DbConfig {
 			env.Get("DB_PASSWORD"),
 		}
 	}
+
 	return *dbConfig // pass by value
 }

@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 )
 
-type m = map[string]interface{}
+type m = map[string]any
 
 // Merge 合併兩 Map, 重複的 key left 優先
-func Merge(left m, right m) map[string]interface{} {
+func Merge(left, right m) map[string]any {
 	for key, rightVal := range right {
 		// 左邊不存在的 key 以右邊補上
 		if _, present := left[key]; !present {
@@ -16,8 +16,9 @@ func Merge(left m, right m) map[string]interface{} {
 	}
 	return left
 }
+
 // FilterKeys 過濾 arg 只留下傳入的  allows 的 key 值
-func FilterKeys(arg m, allows []string) map[string]interface{} {
+func FilterKeys(arg m, allows []string) map[string]any {
 	var ret = make(m)
 	for _, attribute := range allows {
 		if val, ok := arg[attribute]; ok {
@@ -28,7 +29,7 @@ func FilterKeys(arg m, allows []string) map[string]interface{} {
 }
 
 // ToMap transform any object which may implement json tags to map
-func ToMap(obj interface{}) (map[string]interface{}, error) {
+func ToMap(obj any) (map[string]any, error) {
 	var err error
 	objJson, err := json.Marshal(obj)
 	if err != nil {
@@ -42,7 +43,7 @@ func ToMap(obj interface{}) (map[string]interface{}, error) {
 }
 
 // ToMapSlice transform slice of objects to slice of maps
-func ToMapSlice(obj interface{}) ([]m, error) {
+func ToMapSlice(obj any) ([]m, error) {
 	var err error
 	objJson, err := json.Marshal(obj)
 	if err != nil {
@@ -55,23 +56,25 @@ func ToMapSlice(obj interface{}) ([]m, error) {
 	return result, err
 }
 
-// ToPrettyJsonString 將 map 轉換為排版後的 json 字串
-func ToPrettyJsonString(v m) (string, error)  {
-	j, err := json.MarshalIndent(v, "", "  ")
-	if  err != nil {
-		return "", err
+// ObjToPrettyJsonString 將轉換為排版後的 json 字串
+func ToJson(v any) (j string, err error) {
+	var o any
+	switch s := v.(type) {
+	case string:
+		if err = json.Unmarshal([]byte(s), &o); err != nil {
+			o = s
+		}
+
+	case []byte:
+		if err = json.Unmarshal(s, &o); err != nil {
+			o = s
+		}
+	default:
+		o = s
 	}
 
-	return string(j), nil
-}
-
-// ObjToPrettyJsonString 將 object 轉換為排版後的 json 字串
-func ObjToPrettyJsonString(obj interface{})(string, error)  {
-	if m, err := ToMap(obj); err != nil {
-		return "", err
-	} else if j, err := ToPrettyJsonString(m); err != nil {
-		return "", err
-	} else {
-		return j, nil
-	}
+	var b []byte
+	b, err = json.MarshalIndent(o, "", "  ")
+	j = string(b)
+	return
 }

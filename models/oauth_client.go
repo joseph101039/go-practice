@@ -8,7 +8,12 @@ import (
 	"time"
 )
 
+func init() {
+	var _ Model = (*OauthClient)(nil) // 檢查是否實作 Model interface
+}
+
 type OauthClient struct {
+	BaseModel
 	Id           uint      `gorm:"column:id;primary_key;type:int unsigned not null auto_increment"`
 	Domain       string    `gorm:"column:domain;length:255;default:null;comment:重新導向網址的網域 json string 格式"`
 	SystemId     uint      `gorm:"column:system_id;type:int unsigned;comment:所屬系統"`

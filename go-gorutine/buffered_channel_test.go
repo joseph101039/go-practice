@@ -9,10 +9,17 @@ import (
 	"time"
 )
 
+// type Request [T any] struct {
+// 	args []T
+// 	f func(...T) T
+// 	resultChan chan T
+
+// }
+
 type Request struct {
-	args       []interface{}
-	f          func(...interface{}) interface{}
-	resultChan chan interface{}
+	args       []any
+	f          func(...any) any
+	resultChan chan any
 }
 
 func Test_bufferedChannel(t *testing.T) {

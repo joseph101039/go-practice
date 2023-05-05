@@ -3,23 +3,42 @@ package slices
 import (
 	"errors"
 	"reflect"
+
+	"golang.org/x/exp/constraints"
 )
 
 // InSlice 檢查 needle 是否存在於 haystack 中 (模仿 php in_array())
 // reference: https://www.golangprograms.com/how-to-check-if-an-item-exists-in-slice-in-golang.html
-func InSlice(needle interface{}, haystack interface{}) (bool, error) {
-	h := reflect.ValueOf(haystack)
-	if h.Kind() != reflect.Slice {
-		return false, errors.New("haystack is not a slice")
-	}
+func InSlice[T comparable](needle T, haystack []T) bool {
 
-	for i := 0; i < h.Len(); i++ {
-		if h.Index(i).Interface() == needle {
-			return true, nil
+	for _, v := range haystack {
+		if v == needle {
+			return true
 		}
-
 	}
-	return false, nil
+	return false
+
+}
+
+// Max returns the maximum value in a slice
+func Max[T constraints.Ordered](s []T) (m T) {
+	m = s[0]
+	for _, v := range s {
+		if m < v {
+			m = v
+		}
+	}
+	return
+}
+
+func Min[T constraints.Ordered](s []T) (m T) {
+	m = s[0]
+	for _, v := range s {
+		if m > v {
+			m = v
+		}
+	}
+	return
 }
 
 // Reverse 反轉元素位置

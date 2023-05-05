@@ -6,7 +6,12 @@ import (
 	"gorm.io/gorm"
 )
 
+func init() {
+	var _ Model = (*Role)(nil) // 檢查是否實作 Model interface
+}
+
 type Role struct {
+	BaseModel
 	Id        uint           `gorm:"column:id;primary_key;type:int unsigned not null auto_increment"`
 	Name      string         `gorm:"column:name;size:191;comment:角色名稱"`
 	Label     string         `gorm:"column:label;size:191;comment:角色標籤"`

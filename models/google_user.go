@@ -6,7 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+func init() {
+	var _ Model = (*GoogleUser)(nil) // 檢查是否實作 Model interface
+}
+
 type GoogleUser struct {
+	BaseModel
+
 	Id          uint           `gorm:"column:id;primary_key;type:int unsigned not null auto_increment"`
 	Email       string         `gorm:"column:email;index:,length:10;not null;size:255"`
 	Account     string         `gorm:"account;size:255"`
