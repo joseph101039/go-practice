@@ -1,9 +1,6 @@
 package slices
 
 import (
-	"errors"
-	"reflect"
-
 	"golang.org/x/exp/constraints"
 )
 
@@ -55,20 +52,6 @@ func Min[T constraints.Ordered](s []T) (m T) {
 		}
 	}
 	return
-}
-
-// Reverse 反轉元素位置
-func Reverse(s interface{}) {
-	h := reflect.ValueOf(s)
-	if h.Kind() != reflect.Slice {
-		panic(errors.New("not a slice"))
-	}
-
-	n := reflect.ValueOf(s).Len()
-	swap := reflect.Swapper(s)
-	for i, j := 0, n-1; i < j; i, j = i+1, j-1 {
-		swap(i, j)
-	}
 }
 
 // ToUint 將 int slice 轉換成 uint slice

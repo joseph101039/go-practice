@@ -2,6 +2,7 @@ package maps
 
 import (
 	"encoding/json"
+	"goroutine/helpers/maths"
 )
 
 type m = map[string]any
@@ -25,7 +26,7 @@ func FilterKeys[T comparable](arg map[T]any, allows []T) map[T]any {
 			ret[attribute] = val
 		}
 	}
-	return ret
+	return
 }
 
 // ToMap transform any object which may implement json tags to map
