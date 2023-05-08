@@ -98,3 +98,12 @@ func writeShared(shared *int, id int) {
 func randSleep(n int) {
 	time.Sleep(time.Second * time.Duration(rand.Intn(n-1)+1))
 }
+
+func isChannelClosed(ch chan any) bool {
+	select {
+	case _, ok := <-ch:
+		return !ok
+	default:
+	}
+	return false
+}
