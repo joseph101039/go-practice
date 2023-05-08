@@ -72,12 +72,6 @@ func Test_toString(t *testing.T) {
 
 }
 
-func TestMax(t *testing.T) {
-	fmt.Println(slices.Max([]int{1, 2, 3}))
-	v := []float32{1, 2, 3}
-	fmt.Println(slices.Max[float32](v))
-}
-
 func resolveResponseBody(resp *http.Response) (respBody map[string]interface{}) {
 	var err error = nil
 
@@ -145,4 +139,23 @@ type payload struct {
 func (p payload) String() string {
 	s, _ := json.MarshalIndent(p, "", "  ")
 	return fmt.Sprintf("%T: %s\n", p, s)
+}
+
+func Test_panic(t *testing.T) {
+	defer func() {
+		if e := recover(); e != nil {
+			log.Println("first layer e = ", e)
+
+			e := recover()
+			log.Println("first layer take recover again, e= ", e)
+
+			if e := recover(); e != nil {
+				log.Println("second layer e = ", e)
+			}
+		}
+
+	}()
+
+	panic(fmt.Errorf("this is an test of recover "))
+
 }

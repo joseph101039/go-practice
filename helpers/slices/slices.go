@@ -7,9 +7,25 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
+func ArrayMap[IN any, OUT any](callback func(IN) OUT, array []IN) []OUT {
+	o := make([]OUT, len(array))
+	for k, v := range array {
+		o[k] = callback(v)
+	}
+	return o
+}
+
+func ArrayReduce[IN any, OUT any](array []IN, callback func(carry OUT, item IN) OUT, initial OUT) OUT {
+	carry := initial
+	for _, v := range array {
+		carry = callback(carry, v)
+	}
+
+	return carry
+}
+
 // InSlice 檢查 needle 是否存在於 haystack 中 (模仿 php in_array())
-// reference: https://www.golangprograms.com/how-to-check-if-an-item-exists-in-slice-in-golang.html
-func InSlice[T comparable](needle T, haystack []T) bool {
+func InArray[T comparable](needle T, haystack []T) bool {
 
 	for _, v := range haystack {
 		if v == needle {

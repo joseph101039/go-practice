@@ -18,8 +18,8 @@ func Merge(left, right m) map[string]any {
 }
 
 // FilterKeys 過濾 arg 只留下傳入的  allows 的 key 值
-func FilterKeys(arg m, allows []string) map[string]any {
-	var ret = make(m)
+func FilterKeys[T comparable](arg map[T]any, allows []T) map[T]any {
+	var ret = make(map[T]any)
 	for _, attribute := range allows {
 		if val, ok := arg[attribute]; ok {
 			ret[attribute] = val
