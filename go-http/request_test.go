@@ -68,7 +68,7 @@ func Test_toString(t *testing.T) {
 	fmt.Println(goformat.FormatString(nil))
 	fmt.Println(goformat.FormatString(12.24))
 	fmt.Println(goformat.FormatString(u))
-	fmt.Println(goformat.FormatString(i))
+fmt.Println(goformat.FormatString(i))
 
 }
 

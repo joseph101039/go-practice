@@ -2,7 +2,6 @@ package maps
 
 import (
 	"encoding/json"
-	"goroutine/helpers/maths"
 )
 
 type m = map[string]any
@@ -26,7 +25,7 @@ func FilterKeys[T comparable](arg map[T]any, allows []T) map[T]any {
 			ret[attribute] = val
 		}
 	}
-	return
+	return ret
 }
 
 // ToMap transform any object which may implement json tags to map
@@ -79,3 +78,26 @@ func ToJson(v any) (j string, err error) {
 	j = string(b)
 	return
 }
+
+/**
+請寫出一個函式, 輸入為一陣列lst及常數n, 輸出將lst分成每n個為一組的二維陣列,
+example:
+Input:  lst = [1, 2, 3, 4, 5], n=2
+output:  result = [[1, 2], [3, 4], [5]]
+*/
+
+func rerange[T []any](lst []T, n int) (ret [][]T) {
+	lstLen := len(lst) / n
+	ret = make([][]T, lstLen)
+	for i := 0; i < lstLen; i++ {
+		arr := make([]T, n)
+		for j := 0; j < n; j++ {
+			arr[j] = lst[i*n+j]
+		}
+		ret[i] = arr
+	}
+
+	return
+}
+
+
