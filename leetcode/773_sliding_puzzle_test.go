@@ -17,7 +17,7 @@ const x, y = 2, 3
 type Node struct {
 	board        [x][y]int8
 	deep         int8
-	zeroX, zeroY int // 當前 0 的位置
+	zeroX, zeroY int8 // 當前 0 的位置
 }
 
 func slidingPuzzle(board [][]int) (step int) {
@@ -27,12 +27,11 @@ func slidingPuzzle(board [][]int) (step int) {
 			boardInput[i][j] = int8(val)
 		}
 	}
-
 	root := Node{[x][y]int8{{1, 2, 3}, {4, 5, 0}}, 0, 1, 2}
 	boardMap := map[[x][y]int8]*Node{root.board: &root}
 
 	var (
-		stack []Node
+		queue []Node
 		cur   = root
 	)
 	for {
@@ -43,7 +42,7 @@ func slidingPuzzle(board [][]int) (step int) {
 			if _, ok := boardMap[next.board]; !ok {
 				next.deep++
 				next.zeroX--
-				stack = append(stack, next)
+				queue = append(queue, next)
 				boardMap[next.board] = &next
 			}
 		}
@@ -55,7 +54,7 @@ func slidingPuzzle(board [][]int) (step int) {
 			if _, ok := boardMap[next.board]; !ok {
 				next.deep++
 				next.zeroX++
-				stack = append(stack, next)
+				queue = append(queue, next)
 				boardMap[next.board] = &next
 			}
 		}
@@ -67,7 +66,7 @@ func slidingPuzzle(board [][]int) (step int) {
 			if _, ok := boardMap[next.board]; !ok {
 				next.deep++
 				next.zeroY--
-				stack = append(stack, next)
+				queue = append(queue, next)
 				boardMap[next.board] = &next
 			}
 		}
@@ -79,7 +78,7 @@ func slidingPuzzle(board [][]int) (step int) {
 			if _, ok := boardMap[next.board]; !ok {
 				next.deep++
 				next.zeroY++
-				stack = append(stack, next)
+				queue = append(queue, next)
 				boardMap[next.board] = &next
 			}
 		}
@@ -88,11 +87,11 @@ func slidingPuzzle(board [][]int) (step int) {
 			return int(boardMap[boardInput].deep)
 		}
 
-		if len(stack) == 0 {
+		if len(queue) == 0 {
 			break
 		}
 
-		cur, stack = stack[0], stack[1:]
+		cur, queue = queue[0], queue[1:]
 	}
 	return -1
 }
