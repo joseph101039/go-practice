@@ -2,6 +2,7 @@ package slices
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 
 	"golang.org/x/exp/constraints"
@@ -53,23 +54,33 @@ func Sort[T constraints.Ordered](s []T) {
 // Intersect 取所有 slice 交集
 func Intersect[T comparable](slice []T, slices ...[]T) []T {
 
-	hash := make(map[T]struct{}, len(slice))
+	hash := make(map[T]bool, len(slice))
+
 	for _, v := range slice {
-		hash[v] = struct{}{}
+		hash[v] = false
 	}
 
-	// remove the keys if not in other slices
 	for i := 0; i < len(slices); i++ {
 		for _, v := range slices[i] {
-			if _, ok := hash[v]; !ok {
-				delete(hash, v)
+			if _, ok := hash[v]; ok {
+				hash[v] = true
+			}
+
+		}
+		// remove the keys if not in other slices
+		for k, v := range hash {
+			if v {
+				hash[k] = false
+			} else {
+				delete(hash, k)
 			}
 		}
+		fmt.Println(hash)
 	}
 
-	set := make([]T, len(hash))
-	for v, _ := range hash {
-		set = append(set, v)
+	var set []T
+	for k, _ := range hash {
+		set = append(set, k)
 	}
 
 	return set

@@ -2,6 +2,7 @@ package maps
 
 import (
 	"fmt"
+	"goroutine/helpers/slices"
 	"testing"
 )
 
@@ -17,6 +18,13 @@ func Test_FilterKeys(t *testing.T) {
 
 	fmt.Println(
 		FilterKeys(m, allows[:]), // 要將固定長度陣列轉換為 slice，可以使用切片運算符 [:]
+	)
+
+}
+
+func TestIntersect(t *testing.T) {
+	fmt.Println(
+		slices.Intersect([]int{1, 2, 3, 4, 5}, []int{4, 5, 6, 7}, []int{9, 6, 4}),
 	)
 
 }

@@ -25,6 +25,7 @@ func FilterKeys[T comparable](arg map[T]any, allows []T) map[T]any {
 			ret[attribute] = val
 		}
 	}
+
 	return ret
 }
 
@@ -99,5 +100,3 @@ func rerange[T []any](lst []T, n int) (ret [][]T) {
 
 	return
 }
-
-

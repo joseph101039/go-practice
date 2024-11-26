@@ -22,7 +22,7 @@ type server struct {
 }
 
 // The response message containing the greetings
-// type HelloReply struct {
+// type HelloReply struct
 // 	state         protoimpl.MessageState
 // 	sizeCache     protoimpl.SizeCache
 // 	unknownFields protoimpl.UnknownFields
